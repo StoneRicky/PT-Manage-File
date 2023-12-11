@@ -41,19 +41,18 @@ class TorrentStr:
 # 基本信息
 
 # conn_info = dict(
-# host="192.168.0.50",
-# port=27095,
+# host="192.168.0.20",
+# port=8088,
 # # username="admin",
 # # password="adminadmin",
 # )
 
 conn_info = dict(
-host="http://8.140.194.171",
-port=27095,
+host="http://192.168.0.20",
+port=8088,
 username="admin",
-password="Gzc739799",
+password="adminadmin",
 )
-# qb = qbittorrentapi
 
 
 ##########执行逻辑
@@ -136,7 +135,7 @@ if(delTag =="1"):
 else:
     print("不删了")
 
-api = 'https://iyuu.cn/IYUU25787Td349b05c3e4e7f09ee972132ae9ee5719454a529.send'
+api = 'https://iyuu.cn/xxxx.send'
 title = '删种任务执行完成'
 content = '实际删除文件' + str(len(deleteSizes)) + '个，大小' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G\n\n' + deleteInfo
 data = {
