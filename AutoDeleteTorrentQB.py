@@ -38,6 +38,7 @@ class TorrentStr:
     
     
 ##########手动填写区域
+# 应当改为读取配置文件
 # 基本信息
 
 # conn_info = dict(
