@@ -1,6 +1,8 @@
 import qbittorrentapi
 import time
 import requests
+import configparser
+from func_timeout import FunctionTimedOut, func_timeout
 from colorama import Fore
 
 # 种子类
@@ -33,27 +35,18 @@ class TorrentStr:
         I = " | "
         return (self.name + ' \n\n     (' + self.size + I + self.lastActiveTime + I + self.aveUpSpeed + I + self.tag +')\n\n\n\n')
         
-    
         
-    
-    
-##########手动填写区域
-# 应当改为读取配置文件
-# 基本信息
-
-# conn_info = dict(
-# host="192.168.0.20",
-# port=8088,
-# # username="admin",
-# # password="adminadmin",
-# )
-
+        
+# 读取配置文件
+config = configparser.ConfigParser()
+config.read("general.config", encoding="utf-8")
 conn_info = dict(
-host="http://192.168.0.20",
-port=8088,
-username="admin",
-password="adminadmin",
+host = config.get('QB', 'host'),
+port = config.get('QB', 'port'),
+username = config.get('QB', 'username'),
+password = config.get('QB', 'password'),
 )
+
 
 
 ##########执行逻辑
@@ -126,7 +119,11 @@ for deleteSize in deleteSizes:
             qbt_client.torrents_reannounce(torrent_hashes=tr['hash'])
 
 
-delTag = input("确认删除？")
+# 添加定时输入，超时20秒不输入，则直接删除，可适配自动执行脚本
+try:
+    delTag = func_timeout(20, lambda: input('确认删除？'))
+except FunctionTimedOut:
+    delTag = '1'
 
 if(delTag =="1"):
     for deleteHash in deleteHashes:
@@ -136,7 +133,7 @@ if(delTag =="1"):
 else:
     print("不删了")
 
-api = 'https://iyuu.cn/xxxx.send'
+api = 'https://iyuu.cn/'+ config.get('IYUU', 'token') +'.send'
 title = '删种任务执行完成'
 content = '实际删除文件' + str(len(deleteSizes)) + '个，大小' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G\n\n' + deleteInfo
 data = {
