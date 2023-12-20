@@ -53,7 +53,7 @@ password = config.get('QB', 'password'),
 
 qbt_client = qbittorrentapi.Client(**conn_info)
 
-# 获取列表
+# 获取条件搜索列表
 trs = qbt_client.torrents_info(status_filter='completed',tag='已整理',sort='name')
 
 # 获取当前时间
@@ -101,8 +101,12 @@ deleteInfo = ''
 
 deleteHashes = []
 print("删种列表：")
+
+# 获取全部列表 (辅种失败状态不为'completed'，但需要一并删除)
+fullTrs = qbt_client.torrents_info(tag='已整理')
+
 for deleteSize in deleteSizes:
-    for tr in trs:
+    for tr in fullTrs:
         if deleteSize == tr['size']:
             deleteHashes.append(tr['hash'])
             
