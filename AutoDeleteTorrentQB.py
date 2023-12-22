@@ -103,7 +103,7 @@ deleteHashes = []
 print("删种列表：")
 
 # 获取全部列表 (辅种失败状态不为'completed'，但需要一并删除)
-fullTrs = qbt_client.torrents_info(tag='已整理')
+fullTrs = qbt_client.torrents_info()
 
 for deleteSize in deleteSizes:
     for tr in fullTrs:
