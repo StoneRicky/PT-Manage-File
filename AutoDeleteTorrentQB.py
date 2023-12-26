@@ -74,8 +74,10 @@ trSizes = list(set(trSizes))
 deleteSizes = []
 
 for trSize in trSizes:
-    #设置i为0，如果有活动时间低于3600的种子则改为1
-    i = 0
+    #设置白名单状态whiteStatus为0
+    whiteStatus = 0
+    #设置活动状态为0
+    activeStatus = 0
     # 总平均速度
     aveUpspeedTotal = 0
     # 瞬时总速度 
@@ -86,15 +88,22 @@ for trSize in trSizes:
             aveUpspeedTotal = aveUpspeedTotal + tr['uploaded']/(t-tr['added_on'])/1024
             # 瞬时速度累加
             upspeedTotal = upspeedTotal + tr['upspeed']/1024
-            # 白名单判断-1，符合条件继续存在 2700秒内有活动或者同种上传速度共计超过100k/s，可继续存活
-            if (((t-tr['last_activity'])<2700) & (aveUpspeedTotal>100)):
-                i = 1
+            # 确定2700秒内是否有活动
+            if((t-tr['last_activity'])<2700):
+                activeStatus = 1
             
-    # 白名单判断-2，如果当前仍在上传且上传速度能达到200k/s，可继续存活
+            
+    
+    # 白名单判断1，符合条件继续存在活动或者同种上传速度共计超过100k/s，可继续存活
+    if ((activeStatus == 1) & (aveUpspeedTotal > 100)):
+        whiteStatus = 1
+                
+    # 白名单判断2，如果当前仍在上传且上传速度能达到200k/s，可继续存活
     if(upspeedTotal > 200):
-        i = 1
+        whiteStatus = 1
+        
     #如果i保持0，即同大小的种子无一合格，则可以被删
-    if i == 0:
+    if whiteStatus == 0:
         deleteSizes.append(trSize)
 
 deleteInfo = ''
