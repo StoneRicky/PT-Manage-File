@@ -65,7 +65,7 @@ for tr in trs:
     p1 = Torrent(tr['name'],tr['size'],t-tr['last_activity'],tr['uploaded']/(t-tr['added_on']),tr['upspeed'],tr['tags'])
     p1.getPrint()
     upspeed = tr['uploaded']/(t-tr['added_on'])/1024
-    if (('download'not in tr['save_path'])&(((t-tr['last_activity'])>2700)|(upspeed<100))):
+    if (('ssd'in tr['save_path'])&(((t-tr['last_activity'])>2700)|(upspeed<100))):
         trSizes.append(tr['size'])
 # 去重
 trSizes = list(set(trSizes))
