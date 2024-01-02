@@ -141,7 +141,7 @@ except FunctionTimedOut:
 if(delTag =="1"):
     for deleteHash in deleteHashes:
         qbt_client.torrents_delete(delete_files='true',torrent_hashes=deleteHash)
-    print("删除")
+    print("删完了")
     
 else:
     print("不删了")
