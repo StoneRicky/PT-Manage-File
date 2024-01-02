@@ -147,7 +147,7 @@ else:
     print("不删了")
 
 api = 'https://iyuu.cn/'+ config.get('IYUU', 'token') +'.send'
-title = '删种' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G'
+title = '删种' +str(len(deleteSizes)) + '个，' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G'
 content = '实际删除文件' + str(len(deleteSizes)) + '个，大小' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G\n\n' + deleteInfo
 data = {
 		    'text':title,
