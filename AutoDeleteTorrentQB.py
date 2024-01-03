@@ -40,12 +40,22 @@ class TorrentStr:
 # 读取配置文件
 config = configparser.ConfigParser()
 config.read("general.config", encoding="utf-8")
+# QB服务器信息
 conn_info = dict(
 host = config.get('QB', 'host'),
 port = config.get('QB', 'port'),
 username = config.get('QB', 'username'),
 password = config.get('QB', 'password'),
 )
+
+# 删除参数
+deletePath = config.get('AutoDelete', 'deletePath')
+singleSpeed = int(config.get('AutoDelete', 'singleSpeed'))
+groupSpeed = int(config.get('AutoDelete', 'groupSpeed'))
+activeTime = int(config.get('AutoDelete', 'activeTime'))
+
+# IyuuToken
+IyuuToken = config.get('IYUU', 'token')
 
 
 
@@ -59,13 +69,12 @@ trs = qbt_client.torrents_info(status_filter='completed',tag='已整理',sort='n
 # 获取当前时间
 t = time.time() 
 
-# 统计列表 目录不在download 且 （ 有2700秒未活动 或 平均速度不足100k）
+# 统计目录内的文件
 trSizes = []
 for tr in trs:
-    p1 = Torrent(tr['name'],tr['size'],t-tr['last_activity'],tr['uploaded']/(t-tr['added_on']),tr['upspeed'],tr['tags'])
-    p1.getPrint()
-    upspeed = tr['uploaded']/(t-tr['added_on'])/1024
-    if (('ssd'in tr['save_path'])&(((t-tr['last_activity'])>2700)|(upspeed<100))):
+    # p1 = Torrent(tr['name'],tr['size'],t-tr['last_activity'],tr['uploaded']/(t-tr['added_on']),tr['upspeed'],tr['tags'])
+    # p1.getPrint()
+    if (deletePath in tr['save_path']):
         trSizes.append(tr['size'])
 # 去重
 trSizes = list(set(trSizes))
@@ -89,17 +98,17 @@ for trSize in trSizes:
             # 瞬时速度累加
             upspeedTotal = upspeedTotal + tr['upspeed']/1024
             # 确定2700秒内是否有活动
-            if((t-tr['last_activity'])<2700):
+            if((t-tr['last_activity']) < activeTime):
                 activeStatus = 1
             
             
     
     # 白名单判断1，符合条件继续存在活动或者同种上传速度共计超过100k/s，可继续存活
-    if ((activeStatus == 1) & (aveUpspeedTotal > 100)):
+    if ((activeStatus == 1) & (aveUpspeedTotal > singleSpeed)):
         whiteStatus = 1
                 
     # 白名单判断2，如果当前仍在上传且上传速度能达到200k/s，可继续存活
-    if(upspeedTotal > 200):
+    if(upspeedTotal > groupSpeed):
         whiteStatus = 1
         
     #如果i保持0，即同大小的种子无一合格，则可以被删
@@ -146,8 +155,8 @@ if(delTag =="1"):
 else:
     print("不删了")
 
-api = 'https://iyuu.cn/'+ config.get('IYUU', 'token') +'.send'
-title = '删种' +str(len(deleteSizes)) + '个，' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G'
+api = 'https://iyuu.cn/'+ IyuuToken +'.send'
+title = '删种' +str(len(deleteSizes)) + '个(' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G)'
 content = '实际删除文件' + str(len(deleteSizes)) + '个，大小' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G\n\n' + deleteInfo
 data = {
 		    'text':title,
