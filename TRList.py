@@ -6,6 +6,8 @@ from colorama import Fore
 # 读取配置文件
 config = configparser.ConfigParser()
 config.read("general.config", encoding="utf-8")
+
+# 链接信息
 conn_info = Client(
     host = config.get('TR', 'host'),
     port = config.get('TR', 'port'),
@@ -13,12 +15,15 @@ conn_info = Client(
     password = config.get('TR', 'password'),
 )
 
+# 统计路径
+StatisticDir = config.get('TR', 'StatisticDir')
+
 trs = conn_info.get_torrents(arguments=["name","totalSize","downloadDir"])
 
 trList = []
 
 for tr in trs:
-    if(tr.download_dir == '/MagicSATA'):
+    if(tr.download_dir == StatisticDir):
         trList.append(tr.total_size)
         
 # most_common实现排序后转化为list
