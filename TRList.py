@@ -35,4 +35,8 @@ for cnt in cnts:
             if(tr.total_size == cnt[0]):
                 trName = tr.name
                 break
-        print(Fore.GREEN + str(cnt[1]),Fore.BLUE + str(round(cnt[0]/1024/1024/1024,2)) + 'G',Fore.RESET + trName)
+        sizeDisplay = round(cnt[0]/1024/1024/1024,2)
+        space = ''
+        if(sizeDisplay < 100):
+            space = ' '
+        print(Fore.GREEN + str(cnt[1]),Fore.BLUE + space + str("{:.2f}".format(sizeDisplay)) + 'G',Fore.RESET + trName)
