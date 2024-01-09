@@ -16,20 +16,24 @@ conn_info = Client(
 )
 
 # 统计路径
-StatisticDir = config.get('TR', 'StatisticDir')
+StatisticDir = config.get('ListCount', 'statisticDir')
+
+# 最小统计数量
+miniCount = int(config.get('ListCount', 'miniCount'))
+
 
 trs = conn_info.get_torrents(arguments=["name","totalSize","downloadDir"])
 
 trList = []
 
 for tr in trs:
-    if(tr.download_dir == StatisticDir):
+    if(tr.download_dir in StatisticDir):
         trList.append(tr.total_size)
         
 # most_common实现排序后转化为list
 cnts = Counter(trList).most_common()
 for cnt in cnts:
-    if(cnt[1] > 4):
+    if(cnt[1] > miniCount):
         trName = ''
         for tr in trs:
             if(tr.total_size == cnt[0]):
