@@ -39,8 +39,11 @@ for cnt in cnts:
             if(tr.total_size == cnt[0]):
                 trName = tr.name
                 break
+        # 为了对齐，填充空格
         sizeDisplay = round(cnt[0]/1024/1024/1024,2)
         space = ''
         if(sizeDisplay < 100):
             space = ' '
+        if(sizeDisplay < 10):
+            space = '  '
         print(Fore.GREEN + str(cnt[1]),Fore.BLUE + space + str("{:.2f}".format(sizeDisplay)) + 'G',Fore.RESET + trName)
