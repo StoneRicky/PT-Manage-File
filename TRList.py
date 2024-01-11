@@ -7,17 +7,15 @@ from colorama import Fore
 config = configparser.ConfigParser()
 config.read("general.config", encoding="utf-8")
 
-# 链接信息
+# 基础信息
 conn_info = Client(
     host = config.get('TR', 'host'),
     port = config.get('TR', 'port'),
     username = config.get('TR', 'username'),
     password = config.get('TR', 'password'),
 )
-
 # 统计路径
 StatisticDir = config.get('ListCount', 'statisticDir')
-
 # 最小统计数量
 miniCount = int(config.get('ListCount', 'miniCount'))
 
