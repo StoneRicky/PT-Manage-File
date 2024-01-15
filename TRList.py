@@ -2,6 +2,7 @@ import configparser
 from transmission_rpc import Client
 from collections import Counter
 from colorama import Fore
+import requests
 
 # 读取配置文件
 config = configparser.ConfigParser()
@@ -18,6 +19,8 @@ conn_info = Client(
 StatisticDir = config.get('ListCount', 'statisticDir')
 # 最小统计数量
 miniCount = int(config.get('ListCount', 'miniCount'))
+# IyuuToken
+IyuuToken = config.get('IYUU', 'token')
 
 
 trs = conn_info.get_torrents(arguments=["name","totalSize","downloadDir"])
@@ -45,3 +48,13 @@ for cnt in cnts:
         if(sizeDisplay < 10):
             space = '  '
         print(Fore.GREEN + str(cnt[1]),Fore.BLUE + space + str("{:.2f}".format(sizeDisplay)) + 'G',Fore.RESET + trName)
+
+
+api = 'https://iyuu.cn/'+ IyuuToken +'.send'
+title = 'TR做种统计'
+content = '统计路径：' + StatisticDir + '\n' + '最小统计数：' + str(miniCount)
+data = {
+		    'text':title,
+		    'desp':content
+		}
+req = requests.post(api,data = data)
