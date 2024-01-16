@@ -64,6 +64,7 @@ IyuuToken = config.get('IYUU', 'token')
 qbt_client = qbittorrentapi.Client(**conn_info)
 
 # 获取条件搜索列表
+allTrs = qbt_client.torrents_info()
 trs = qbt_client.torrents_info(status_filter='completed',tag='已整理',sort='name')
 
 # 获取当前时间
@@ -74,7 +75,7 @@ trSizes = []
 for tr in trs:
     # p1 = Torrent(tr['name'],tr['size'],t-tr['last_activity'],tr['uploaded']/(t-tr['added_on']),tr['upspeed'],tr['tags'])
     # p1.getPrint()
-    if (deletePath in tr['save_path']):
+    if (tr['save_path'] in deletePath):
         trSizes.append(tr['size'])
 # 去重
 trSizes = list(set(trSizes))
@@ -91,7 +92,7 @@ for trSize in trSizes:
     aveUpspeedTotal = 0
     # 瞬时总速度 
     upspeedTotal = 0
-    for tr in trs:
+    for tr in allTrs:
         if trSize == tr['size']:
             # 平均速度累加
             aveUpspeedTotal = aveUpspeedTotal + tr['uploaded']/(t-tr['added_on'])/1024
