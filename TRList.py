@@ -30,7 +30,9 @@ trList = []
 for tr in trs:
     if(tr.download_dir in StatisticDir):
         trList.append(tr.total_size)
-        
+
+listContent = ''
+
 # most_common实现排序后转化为list
 cnts = Counter(trList).most_common()
 for cnt in cnts:
@@ -48,11 +50,12 @@ for cnt in cnts:
         if(sizeDisplay < 10):
             space = '  '
         print(Fore.GREEN + str(cnt[1]),Fore.BLUE + space + str("{:.2f}".format(sizeDisplay)) + 'G',Fore.RESET + trName)
+        listContent = listContent + str(cnt[1]) + ' ' + space + str("{:.2f}".format(sizeDisplay)) + 'G ' + trName + '\n'
 
 
 api = 'https://iyuu.cn/'+ IyuuToken +'.send'
 title = 'TR做种统计'
-content = '统计路径：' + StatisticDir + '\n' + '最小统计数：' + str(miniCount)
+content = '统计路径：' + StatisticDir + '\n' + '最小统计数：' + str(miniCount) + '\n' + listContent
 data = {
 		    'text':title,
 		    'desp':content
