@@ -49,8 +49,10 @@ for cnt in cnts:
             space = ' '
         if(sizeDisplay < 10):
             space = '  '
-        print(Fore.GREEN + str(cnt[1]),Fore.BLUE + space + str("{:.2f}".format(sizeDisplay)) + 'G',Fore.RESET + trName)
-        listContent = listContent + str(cnt[1]) + ' ' + space + str("{:.2f}".format(sizeDisplay)) + 'G ' + trName + '\n'
+        count = str(cnt[1])
+        size = str("{:.2f}".format(sizeDisplay))
+        print(Fore.GREEN + count,Fore.BLUE + space + size + 'G',Fore.RESET + trName)
+        listContent = listContent + '<font color="#00CD00">' + count + '</font> ' + space + '<font color="#0000CD">' + size + 'G</font> ' + trName[:25] + '…\n'
 
 
 api = 'https://iyuu.cn/'+ IyuuToken +'.send'
@@ -58,6 +60,6 @@ title = 'TR做种统计'
 content = '统计路径：' + StatisticDir + '\n' + '最小统计数：' + str(miniCount) + '\n' + listContent
 data = {
 		    'text':title,
-		    'desp':content
+		    'desp':listContent
 		}
 req = requests.post(api,data = data)
