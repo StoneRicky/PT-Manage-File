@@ -60,6 +60,6 @@ title = 'TR做种统计'
 content = '统计路径：' + StatisticDir + '\n' + '最小统计数：' + str(miniCount) + '\n' + listContent
 data = {
 		    'text':title,
-		    'desp':listContent
+		    'desp':content
 		}
 req = requests.post(api,data = data)
