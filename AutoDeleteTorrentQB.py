@@ -48,12 +48,13 @@ username = config.get('QB', 'username'),
 password = config.get('QB', 'password'),
 )
 
-# 删除参数
+# 删除所需参数
 deletePath = config.get('AutoDelete', 'deletePath')
 singleSpeed = int(config.get('AutoDelete', 'singleSpeed'))
 groupSpeed = int(config.get('AutoDelete', 'groupSpeed'))
 activeTime = int(config.get('AutoDelete', 'activeTime'))
-
+HRTime = 8 * 3600
+farmTag = 'Redleaves'
 # IyuuToken
 IyuuToken = config.get('IYUU', 'token')
 
