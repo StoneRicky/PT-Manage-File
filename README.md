@@ -11,7 +11,6 @@
 2. IYUU定时自动辅种  
 3. 此脚本定时自动删种同时删除辅种  
 
-  
 ## [TRList.py](https://github.com/StoneRicky/PT-Manage-File/blob/main/TRList.py)  
 用于统计当前Transmission中正在做种的文件的辅种数量，按倒序排列，可通过爱语飞飞通知
 

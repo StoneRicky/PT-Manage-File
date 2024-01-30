@@ -34,9 +34,7 @@ class TorrentStr:
     def getStr(self):
         I = " | "
         return (self.name + ' \n\n     (' + self.size + I + self.lastActiveTime + I + self.aveUpSpeed + I + self.tag +')\n\n\n\n')
-        
-        
-        
+
 # 读取配置文件
 config = configparser.ConfigParser()
 config.read("general.config", encoding="utf-8")
@@ -102,8 +100,6 @@ for trSize in trSizes:
             # 确定2700秒内是否有活动
             if((t-tr['last_activity']) < activeTime):
                 activeStatus = 1
-            
-            
     
     # 白名单判断1，符合条件继续存在活动或者同种上传速度共计超过100k/s，可继续存活
     if ((activeStatus == 1) & (aveUpspeedTotal > singleSpeed)):
