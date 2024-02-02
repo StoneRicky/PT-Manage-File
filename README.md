@@ -14,3 +14,4 @@
 ## [TRList.py](https://github.com/StoneRicky/PT-Manage-File/blob/main/TRList.py)  
 用于统计当前Transmission中正在做种的文件的辅种数量，按倒序排列，可通过爱语飞飞通知
 
+## [AutoTorrentSelectQB.py]
