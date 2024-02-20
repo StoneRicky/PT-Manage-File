@@ -1,5 +1,6 @@
 import qbittorrentapi
 import configparser
+import requests
 
 ##########手动填写区域
 # 基本信息
@@ -7,6 +8,8 @@ import configparser
 # 读取配置文件
 config = configparser.ConfigParser()
 config.read("general.config", encoding="utf-8")
+# IyuuToken
+IyuuToken = config.get('IYUU', 'token')
 # QB服务器信息
 
 conn_info = dict(
@@ -54,3 +57,4 @@ for i in a:
     
 
 print("已结束,总文件%d个，大小为%.2fG\n" %(count,size/1024/1024/1024))
+
