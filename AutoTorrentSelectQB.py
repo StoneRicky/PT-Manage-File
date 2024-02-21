@@ -58,3 +58,11 @@ for i in a:
 
 print("已结束,总文件%d个，大小为%.2fG\n" %(count,size/1024/1024/1024))
 
+api = 'https://iyuu.cn/'+ IyuuToken +'.send'
+title = "已结束,总文件%d个，大小为%.2fG" %(count,size/1024/1024/1024)
+content = ''
+data = {
+		    'text':title,
+		    'desp':content
+		}
+req = requests.post(api,data = data)
