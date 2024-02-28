@@ -19,6 +19,7 @@ username = config.get('QB', 'username'),
 password = config.get('QB', 'password'),
 )
 
+# 此处应该改为输入
 # 种子信息
 hash = '1e51da5676bf2d537609a54cbb4d6e6099f94a68'
 # 设置信息 0-不下载 1-正常
