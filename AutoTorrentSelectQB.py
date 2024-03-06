@@ -57,8 +57,8 @@ for i in a:
                     t = i['index']
                     if(testStatus == 1):
                         qbt_client .torrents_file_priority(torrent_hash=hash,file_ids=t,priority=status)
-            
-            # print ("文件名为{"+i['name']+"}的文件优先级已修改为["+statusCN+"]当前总大小为%.2fG\n" %(size/1024/1024/1024))
+                    
+                    print ("文件名为{"+i['name']+"}的文件优先级已修改为["+statusCN+"]，该文件大小为%.2fM，当前总大小为%.2fG" %((int(i['size'])/1024/1024),(size/1024/1024/1024)))
 
     
 
