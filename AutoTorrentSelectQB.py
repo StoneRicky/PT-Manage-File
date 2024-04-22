@@ -46,6 +46,7 @@ count = 0
 statusCN = '下载'
 if(status == 0):statusCN = '不下载'
 
+content = ''
 
 for i in a:
     # print(i)
@@ -57,16 +58,16 @@ for i in a:
                     t = i['index']
                     if(testStatus == 1):
                         qbt_client .torrents_file_priority(torrent_hash=hash,file_ids=t,priority=status)
-                    
+                    content = content + i['name'] + round(int(i['size'])/1024/1024,2) + 'M' +'\n\n\n\n'
                     print ("文件名为{"+i['name']+"}的文件优先级已修改为["+statusCN+"]，该文件大小为%.2fM，当前总大小为%.2fG" %((int(i['size'])/1024/1024),(size/1024/1024/1024)))
 
-    
+content = content + '总大小' + round((count,size/1024/1024/1024),2)  + 'G'
 
 print("已结束,总文件%d个，大小为%.2fG\n" %(count,size/1024/1024/1024))
 
 api = 'https://iyuu.cn/'+ IyuuToken +'.send'
 title = "已结束,总文件%d个，大小为%.2fG" %(count,size/1024/1024/1024)
-content = ''
+
 data = {
 		    'text':title,
 		    'desp':content
