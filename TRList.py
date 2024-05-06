@@ -52,7 +52,7 @@ for cnt in cnts:
         count = str(cnt[1])
         size = str("{:.2f}".format(sizeDisplay))
         print(Fore.GREEN + count,Fore.BLUE + space + size + 'G',Fore.RESET + trName)
-        listContent = listContent + '<font color="#00CD00">' + count + '</font> ' + space + '<font color="#0000CD">' + size + 'G</font> ' + trName[:25] + '…\n'
+        listContent = listContent + '<font color="#00CD00">' + count + '</font> ' + space + '<font color="#0000CD">' + size + 'G</font> ' + trName + '\n'
 
 
 api = 'https://iyuu.cn/'+ IyuuToken +'.send'
