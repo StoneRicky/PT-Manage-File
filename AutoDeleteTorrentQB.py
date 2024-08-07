@@ -148,10 +148,10 @@ except FunctionTimedOut:
 if(delTag =="1"):
     for deleteHash in deleteHashes:
         qbt_client.torrents_delete(delete_files='true',torrent_hashes=deleteHash)
-    print("删完了")
+    print("删除操作已完成")
     
 else:
-    print("不删了")
+    print("删除操作已取消")
 
 api = 'https://iyuu.cn/'+ IyuuToken +'.send'
 title = '删种' +str(len(deleteSizes)) + '个(' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G)'
