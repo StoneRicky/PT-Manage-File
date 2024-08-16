@@ -9,7 +9,8 @@ from colorama import Fore
 
 # 用于print输出
 class Torrent:
-    
+    # __init__是构造方法，在实例化时自动执行
+    # self是实例本身，调用时不用传递
     def __init__(self,name,size,lastActiveTime,aveUpSpeed,upSpeed,tag):
         self.name = Fore.GREEN + name
         self.size = Fore.BLUE + str(round(size/1024/1024/1024,2)) + Fore.RESET + "G"
@@ -38,6 +39,7 @@ class TorrentStr:
 # 读取配置文件
 config = configparser.ConfigParser()
 config.read("general.config", encoding="utf-8")
+
 # QB服务器信息
 conn_info = dict(
 host = config.get('QB', 'host'),
@@ -53,6 +55,7 @@ groupSpeed = int(config.get('AutoDelete', 'groupSpeed'))
 activeTime = int(config.get('AutoDelete', 'activeTime'))
 HRTime = 8 * 3600
 farmTag = 'Redleaves'
+
 # IyuuToken
 IyuuToken = config.get('IYUU', 'token')
 
