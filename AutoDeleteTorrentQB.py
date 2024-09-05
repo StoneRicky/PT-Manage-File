@@ -11,8 +11,8 @@ from colorama import Fore
 class Torrent:
     # __init__是构造方法，在实例化时自动执行
     # self是实例本身，调用时不用传递
-    def __init__(self,name,size,lastActiveTime,uploadedSize,uploadedTime,upSpeed,tag):
-        aveUpSpeed = uploadedSize/uploadedTime
+    def __init__(self,name,size,lastActiveTime,uploadedSize,addTime,upSpeed,tag):
+        aveUpSpeed = uploadedSize/(t-addTime)
         self.name = Fore.GREEN + name
         self.size = Fore.BLUE + str(round(size/1024/1024/1024,2)) + Fore.RESET + "G"
         self.lastActiveTime = Fore.BLUE + str(round((lastActiveTime)/60)) + Fore.RESET + "min"
@@ -27,18 +27,20 @@ class Torrent:
 # 用于发送微信通知
 class TorrentStr:
     
-    def __init__(self,name,size,lastActiveTime,uploadedSize,uploadedTime,upSpeed,tag):
-        aveUpSpeed = uploadedSize/uploadedTime
+    def __init__(self,name,size,lastActiveTime,uploadedSize,addTime,upSpeed,tag):
+        aveUpSpeed = uploadedSize/(t-addTime)
         self.name = '- ' + name.replace('[','\\[').replace(']','\\]')
         self.size = '**' + str(round(size/1024/1024/1024,2)) + '**' + "G"
-        self.lastActiveTime = '**' + str(round((lastActiveTime)/60)) + '**' + "min"
-        self.uploadedSize = '**' + str(round(uploadedSize/1024/1024/1024,3)) + '**' + "G"
-        self.aveUpSpeed = '**' + str(round(upSpeed/1024)) + '**' + "(" + str(round(aveUpSpeed/1024)) + ")" + "k/s"
-        self.tag = '**' + tag + '**'
+        self.addTime = '已添加时间：**' + str(round((t-addTime)/60)) + '**' + "min"
+        self.lastActiveTime = '距上次活跃时间：**' + str(round((lastActiveTime)/60)) + '**' + "min"
+        self.uploadedSize = '已上传大小：**' + str(round(uploadedSize/1024/1024/1024,3)) + '**' + "G"
+        self.nowUpSpeed = '当前上传速度：**' + str(round(upSpeed/1024)) + '**' + "k/s"
+        self.aveUpSpeed = '平均上传速度：**' + str(round(aveUpSpeed/1024)) + '**' + "k/s"
+        self.tag = '标签：**' + tag + '**'
     
     def getStr(self):
         I = " | "
-        return (self.name + '('  + self.size + ') \n\n     ('+ self.lastActiveTime + I + self.uploadedSize + I + self.aveUpSpeed + I + self.tag +')\n\n\n\n')
+        return (self.name + '('  + self.size + ') \n\n '+ self.addTime + '\n ' + self.lastActiveTime + '\n ' + self.uploadedSize + '\n ' + self.nowUpSpeed  + '\n ' + self.aveUpSpeed + '\n ' + self.tag +'\n\n\n\n')
 
 # 读取配置文件
 config = configparser.ConfigParser()
@@ -138,9 +140,10 @@ for deleteSize in deleteSizes:
             p1.getPrint()
             
             # iyuu通知输出
+            print(tr['added_on'])
             p2 = TorrentStr(tr['name'],tr['size'],t-tr['last_activity'],tr['uploaded'],tr['added_on'],tr['upspeed'],tr['tags'])
             deleteInfo = deleteInfo + p2.getStr()
-            
+            print(p2.getStr())
             # 增加tag，强制汇报
             qbt_client.torrents_add_tags(tags='计划删除',torrent_hashes=tr['hash'])
             qbt_client.torrents_reannounce(torrent_hashes=tr['hash'])
