@@ -74,12 +74,12 @@ qbt_client = qbittorrentapi.Client(**conn_info)
 
 # 获取条件搜索列表
 allTrs = qbt_client.torrents_info()
-if(completed == 0):
-    trs = qbt_client.torrents_info(status_filter='completed',tag='已整理',sort='name')
-else:
-    trs = qbt_client.torrents_info(tag='已整理',sort='name')
-    
 
+trs = qbt_client.torrents_info(status_filter='completed',tag='已整理',sort='name')
+
+downloadTrs = []
+if(completed == 1):
+    downloadTrs = qbt_client.torrents_info(status_filter='downloading',tag='已整理',sort='name')
 
 
 # 获取当前时间
@@ -88,16 +88,25 @@ t = time.time()
 # 统计目录内的文件
 trSizes = []
 for tr in trs:
-    # p1 = Torrent(tr['name'],tr['size'],t-tr['last_activity'],tr['uploaded']/(t-tr['added_on']),tr['upspeed'],tr['tags'])
-    # p1.getPrint()
     if (tr['save_path'] in deletePath):
         trSizes.append(tr['size'])
 # 去重
 trSizes = list(set(trSizes))
 
+
+# 统计目录内的文件
+downloadTrSizes = []
+for tr in downloadTrs:
+    if (tr['save_path'] in deletePath):
+        trSizes.append(tr['size'])
+# 去重
+downloadTrSizes = list(set(trSizes))
+
+
 # 循环查找
 deleteSizes = []
 
+# 已完成的判断
 for trSize in trSizes:
     #设置白名单状态whiteStatus为0
     whiteStatus = 0
@@ -119,6 +128,37 @@ for trSize in trSizes:
     
     # 白名单判断1，符合条件继续存在活动或者同种上传速度共计超过100k/s，可继续存活
     if ((activeStatus == 1) & (aveUpspeedTotal > singleSpeed)):
+        whiteStatus = 1
+                
+    # 白名单判断2，如果当前仍在上传且上传速度能达到200k/s，可继续存活
+    if(upspeedTotal > groupSpeed):
+        whiteStatus = 1
+        
+    #如果i保持0，即同大小的种子无一合格，则可以被删
+    if whiteStatus == 0:
+        deleteSizes.append(trSize)
+
+# 下载中的判断
+for trSize in downloadTrSizes:
+    #设置白名单状态whiteStatus为0
+    whiteStatus = 0
+    #设置活动状态为0
+    activeStatus = 0
+    # 总平均速度
+    aveUpspeedTotal = 0
+    # 瞬时总速度 
+    upspeedTotal = 0
+    for tr in allTrs:
+        if trSize == tr['size']:
+            # 平均速度累加
+            aveUpspeedTotal = aveUpspeedTotal + tr['uploaded']/(t-tr['added_on'])/1024
+            # 瞬时速度累加
+            upspeedTotal = upspeedTotal + tr['upspeed']/1024
+            # 确定2700秒内是否有活动
+
+    
+    # 白名单判断1，符合条件继续存在活动或者同种上传速度共计超过100k/s，可继续存活
+    if (aveUpspeedTotal > singleSpeed):
         whiteStatus = 1
                 
     # 白名单判断2，如果当前仍在上传且上传速度能达到200k/s，可继续存活
