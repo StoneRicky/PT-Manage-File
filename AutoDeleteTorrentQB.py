@@ -59,6 +59,7 @@ deletePath = config.get('AutoDelete', 'deletePath')
 singleSpeed = int(config.get('AutoDelete', 'singleSpeed'))
 groupSpeed = int(config.get('AutoDelete', 'groupSpeed'))
 activeTime = int(config.get('AutoDelete', 'activeTime'))
+completed = int(config.get('AutoDelete', 'completed'))
 HRTime = 8 * 3600
 farmTag = 'Redleaves'
 
@@ -73,7 +74,13 @@ qbt_client = qbittorrentapi.Client(**conn_info)
 
 # 获取条件搜索列表
 allTrs = qbt_client.torrents_info()
-trs = qbt_client.torrents_info(status_filter='completed',tag='已整理',sort='name')
+if(completed == 1):
+    trs = qbt_client.torrents_info(status_filter='completed',tag='已整理',sort='name')
+else:
+    trs = qbt_client.torrents_info(tag='已整理',sort='name')
+    
+
+
 
 # 获取当前时间
 t = time.time() 
