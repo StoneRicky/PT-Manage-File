@@ -74,7 +74,7 @@ qbt_client = qbittorrentapi.Client(**conn_info)
 
 # 获取条件搜索列表
 allTrs = qbt_client.torrents_info()
-if(completed == 1):
+if(completed == 0):
     trs = qbt_client.torrents_info(status_filter='completed',tag='已整理',sort='name')
 else:
     trs = qbt_client.torrents_info(tag='已整理',sort='name')
