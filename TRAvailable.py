@@ -30,7 +30,17 @@ def tracker(s):
         result = s[start_index:end_index]
         return result
     else:
-        return None
+        return ''
+    
+# 生成name
+def name(s):
+    start_index = s.find('') + len('')
+    end_index = s.find('.')
+    if start_index < end_index:
+        result = s[start_index:end_index]
+        return result
+    else:
+        return s
     
 trs = conn_info.get_torrents(arguments=["name","totalSize","downloadDir","trackerList"])
 
@@ -47,13 +57,13 @@ for tr in trs:
 # trackerList = list(set(trackerList))
 # trackerList = [x for x in trackerList if x is not None and x != '']
 
+# 按大小
 # 统计所有文件
 sizeList = []
 for tr in trs:
     sizeList.append(tr.total_size)
 sizeList = list(set(sizeList))
 sizeList = [x for x in sizeList if x is not None and x != '']
-
 # 查询某个tracker所有的做种
 selectTracker = 'tracker.rainbowisland.co'
 
@@ -64,13 +74,35 @@ for tr in trs:
 selectsizeList = list(set(selectsizeList))
 selectsizeList = [x for x in selectsizeList if x is not None and x != '']
 
-diffs = list(set(sizeList) ^ set(selectsizeList))
-# output = '\n'.join(diffs)
-# print(output)
+diffSizes = list(set(sizeList) ^ set(selectsizeList))
 
+# 按名称
+nameList = []
+for tr in trs:
+    # print(name(tr.name))
+    nameList.append(name(tr.name))
+nameList = list(set(nameList))
+nameList = [x for x in nameList if x is not None and x != '']
 
-for diff in diffs:
-    # print(diff)
+# 查询某个tracker所有的做种
+selectTracker = 'tracker.rainbowisland.co'
+
+selectNameList = []
+for tr in trs:
+    if(selectTracker == tracker(tr.tracker_list[0])):
+        # print(tr.name,tr.total_size)
+        selectNameList.append(name(tr.name))
+selectNameList = list(set(selectNameList))
+selectNameList = [x for x in selectNameList if x is not None and x != '']
+
+diffNames = list(set(nameList) ^ set(selectNameList))
+print(diffNames)
+# for tr in trs:
+#     if('Shaolin.Soccer' in tr.name):
+#         print(tr.total_size,tracker(tr.tracker_list[0]),tr.name)
+
+print('按大小：')
+for diff in diffSizes:
     for tr in trs:
             if(tr.total_size == diff):
                 trName = tr.name
@@ -82,10 +114,25 @@ for diff in diffs:
                 if(sizeDisplay < 10):
                     space = '  '
                 size = str("{:.2f}".format(sizeDisplay))
-                print(Fore.GREEN + '',Fore.BLUE + space + size + 'G',Fore.RESET + trName)
+                print(Fore.BLUE + space + size + 'G',Fore.RESET + trName , tr.total_size)
                 break
 
 
+print('按名称：')
+for diff in diffNames:
+    for tr in trs:
+            if(diff in tr.name):
+                trName = tr.name
+                # 为了对齐，填充空格
+                sizeDisplay = round(tr.total_size/1024/1024/1024,2)
+                space = ''
+                if(sizeDisplay < 100):
+                    space = ' '
+                if(sizeDisplay < 10):
+                    space = '  '
+                size = str("{:.2f}".format(sizeDisplay))
+                print(Fore.GREEN + space + size + 'G',Fore.RESET + trName , tr.total_size)
+                break
 
 listContent = ''
 
