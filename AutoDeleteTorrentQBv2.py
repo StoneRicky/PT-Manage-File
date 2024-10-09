@@ -254,6 +254,8 @@ print("删种列表：")
 
 # 辅种失败状态不为'completed'，但需要一并删除
 
+sizeCount = 0
+
 for deleteSize in deleteSizes:
     for tr in allTrs:
         if deleteSize == tr['size']:
@@ -276,9 +278,13 @@ for deleteSize in deleteSizes:
             p2 = TorrentNotice(torrent)
             deleteInfo = deleteInfo + p2.getStr()
             
+            # 上传累加
+            sizeCount  = sizeCount + tr['uploaded']
+            
             # 增加tag，强制汇报
             qbt_client.torrents_add_tags(tags='计划删除',torrent_hashes=tr['hash'])
             qbt_client.torrents_reannounce(torrent_hashes=tr['hash'])
+
 
 
 # 添加定时输入，超时20秒不输入，则直接删除，可适配自动执行脚本
@@ -296,7 +302,7 @@ else:
     print("删除操作已取消")
 
 api = 'https://iyuu.cn/'+ IyuuToken +'.send'
-title = '删种' +str(len(deleteSizes)) + '个(' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G)'
+title = '删种' +str(len(deleteSizes)) + '|' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G|上传:'+str(round(sizeCount/1024/1024/1024,2)) + 'G'
 content = '实际删除文件' + str(len(deleteSizes)) + '个，大小' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G\n\n' + deleteInfo
 data = {
 		    'text':title,
