@@ -7,7 +7,7 @@ import requests
 
 # 此处应该改为输入
 # 种子信息
-hash = 'fgsdfgffdfd'
+hash = '33c5ad6aaaee8fcb6cb6b6d0d00555d6414344b3'
 # 测试文件大小 0-测试(仅统计) 1-修改
 testStatus = 0
 # 设置信息 0-不下载 1-正常
@@ -15,11 +15,14 @@ status = 0
 # if(testStatus == 1):
 #     status = input('请输入设置状态？(0-不下载 1-正常)：')
 # 文件类型
-fileTyle = 'jpg'
+fileTyle = ''
 # 文件包含字符串
-inName = '张三'
-# 文件大小
-fileSize = 2 * 1024 * 1024
+inName = ''
+# 文件大小 MB 
+fileSize = 50 * 1024 * 1024
+# 对比 0 - 小于此值  1 - 大于此值 
+copmare = 1
+
 
 # 读取配置文件
 config = configparser.ConfigParser()
@@ -52,16 +55,26 @@ for i in a:
     # print(i)
     if inName in i['name']:
             if i['name'].endswith(fileTyle):
-                if (i['size'] < fileSize)&(i['name'].endswith(fileTyle)):
-                    size = size + i['size']
-                    count = count + 1
-                    t = i['index']
-                    if(testStatus == 1):
-                        qbt_client .torrents_file_priority(torrent_hash=hash,file_ids=t,priority=status)
-                    content = content + i['name'] + round(int(i['size'])/1024/1024,2) + 'M' +'\n\n\n\n'
-                    print ("文件名为{"+i['name']+"}的文件优先级已修改为["+statusCN+"]，该文件大小为%.2fM，当前总大小为%.2fG" %((int(i['size'])/1024/1024),(size/1024/1024/1024)))
-
-content = content + '总大小' + round((count,size/1024/1024/1024),2)  + 'G'
+                if copmare == 0:
+                    if (i['size'] < fileSize)&(i['name'].endswith(fileTyle)):
+                        size = size + i['size']
+                        count = count + 1
+                        t = i['index']
+                        if(testStatus == 1):
+                            qbt_client .torrents_file_priority(torrent_hash=hash,file_ids=t,priority=status)
+                        content = content + i['name'] + str(round(int(i['size'])/1024/1024,2)) + 'M' +'\n\n\n\n'
+                        print ("文件名为{"+i['name']+"}的文件优先级已修改为["+statusCN+"]，该文件大小为%.2fM，当前总大小为%.2fG" %((int(i['size'])/1024/1024),(size/1024/1024/1024)))
+                else:
+                    if (i['size'] > fileSize)&(i['name'].endswith(fileTyle)):
+                        size = size + i['size']
+                        count = count + 1
+                        t = i['index']
+                        if(testStatus == 1):
+                            qbt_client .torrents_file_priority(torrent_hash=hash,file_ids=t,priority=status)
+                        content = content + i['name'] + str(round(int(i['size'])/1024/1024,2)) + 'M' +'\n\n\n\n'
+                        print ("文件名为{"+i['name']+"}的文件优先级已修改为["+statusCN+"]，该文件大小为%.2fM，当前总大小为%.2fG" %((int(i['size'])/1024/1024),(size/1024/1024/1024)))
+                
+content = content + '总大小' + str(round((size/1024/1024/1024),2))  + 'G'
 
 print("已结束,总文件%d个，大小为%.2fG\n" %(count,size/1024/1024/1024))
 
