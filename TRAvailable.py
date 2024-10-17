@@ -65,7 +65,7 @@ for tr in trs:
 sizeList = list(set(sizeList))
 sizeList = [x for x in sizeList if x is not None and x != '']
 # 查询某个tracker所有的做种
-selectTracker = 'tracker.rainbowisland.co'
+selectTracker = 'tracker2.leaves.red'
 
 selectsizeList = []
 for tr in trs:
@@ -84,9 +84,6 @@ for tr in trs:
 nameList = list(set(nameList))
 nameList = [x for x in nameList if x is not None and x != '']
 
-# 查询某个tracker所有的做种
-selectTracker = 'tracker.rainbowisland.co'
-
 selectNameList = []
 for tr in trs:
     if(selectTracker == tracker(tr.tracker_list[0])):
@@ -102,9 +99,11 @@ print(diffNames)
 #         print(tr.total_size,tracker(tr.tracker_list[0]),tr.name)
 
 print('按大小：')
+# reverse True 正序 False 倒序
+diffSizes.sort(reverse=True)
 for diff in diffSizes:
     for tr in trs:
-            if(tr.total_size == diff):
+            if(diff == tr.total_size):
                 trName = tr.name
                 # 为了对齐，填充空格
                 sizeDisplay = round(tr.total_size/1024/1024/1024,2)
