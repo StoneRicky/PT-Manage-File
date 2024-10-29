@@ -5,7 +5,8 @@ import configparser
 # import TorrentEntity
 from func_timeout import FunctionTimedOut, func_timeout
 from colorama import Fore
-
+from tabulate import tabulate
+import wcwidth
 # 种子类
 class TorrentEntity:
 
@@ -71,7 +72,7 @@ class TorrentEntity:
     def tag(self):
         return self._tag
     
-    @upSpeed.setter
+    @tag.setter
     def tag(self,value):
         self._tag = value
     
@@ -114,7 +115,15 @@ class TorrentNotice:
     
     def getStr(self):
         I = " | "
-        return (self.name + '('  + self.size + ') \n\n '+ self.addTime + '\n ' + self.lastActiveTime + '\n ' + self.uploadedSize + '\n ' + self.nowUpSpeed  + '\n ' + self.aveUpSpeed + '\n ' + self.tag +'\n\n\n\n')
+        return (# self.name + '('  + self.size + ') \n\n '
+                #+ 
+                self.addTime + '\n ' 
+                + self.lastActiveTime + '\n ' 
+                + self.uploadedSize + '\n ' 
+                + self.nowUpSpeed  + '\n ' 
+                + self.aveUpSpeed + '\n ' 
+                + self.tag +'\n')
+
 
 # 读取配置文件
 config = configparser.ConfigParser()
@@ -242,9 +251,10 @@ for trSize in downloadTrSizes:
         
     #如果i保持0，即同大小的种子无一合格，则可以被删
     if whiteStatus == 0:
+        print(trSize)
         deleteSizes.append(trSize)
 
-deleteInfo = ''
+
 
 # 去重
 deleteSizes = list(set(deleteSizes))
@@ -256,12 +266,24 @@ print("删种列表：")
 
 sizeCount = 0
 
+api = 'https://iyuu.cn/'+ IyuuToken +'.send'
+
+contentInfo = ''
+# tableHeader = '<tr><th>文件名</th><th>已存在(min)</th><th>上次活动(min)</th><th>当前上传(k/s)</th><th>平均上传(k/s)</th><th>已上传(G)</th><th>标签</th></tr>'
+tableHeader = '<tr><th>文件名</th><th>已上传(G)</th><th>标签</th></tr>'
+    
 for deleteSize in deleteSizes:
+    trName = ''
+    trSize = ''
+    tableBody = ''
     for tr in allTrs:
+
         if deleteSize == tr['size']:
             deleteHashes.append(tr['hash'])
-            
+            trName = tr['name']
+            trSize = str(round(tr['size']/1024/1024/1024,2)) + "G"
             torrent = TorrentEntity()
+            
             torrent.name = tr['name']
             torrent.size = tr['size']
             torrent.lastActiveTime = t-tr['last_activity']
@@ -273,10 +295,13 @@ for deleteSize in deleteSizes:
             # print输出
             p1 = TorrentPrint(torrent)
             p1.getPrint()
-            
-            # iyuu通知输出
-            p2 = TorrentNotice(torrent)
-            deleteInfo = deleteInfo + p2.getStr()
+            tableBody = tableBody + '<tr><td>' + tr['name'][:10] + '(' + trSize + ')' + '</td><td>' \
+            + str(round(tr['uploaded']/1024/1024/1024,3)) +'</td><td>' \
+            + torrent.tag.split(',')[0]+'</td></tr>'
+            # + str(round((t-tr['added_on'])/60)) +'</td><td>' \
+            # + str(round((t-tr['last_activity'])/60)) +'</td><td>' \
+            # + str(round(tr['upspeed']/1024)) +'</td><td>' \
+            # + str(round((tr['uploaded']/(t-tr['added_on']))/1024,2)) +'</td><td>' \
             
             # 上传累加
             sizeCount  = sizeCount + tr['uploaded']
@@ -284,8 +309,33 @@ for deleteSize in deleteSizes:
             # 增加tag，强制汇报
             qbt_client.torrents_add_tags(tags='计划删除',torrent_hashes=tr['hash'])
             qbt_client.torrents_reannounce(torrent_hashes=tr['hash'])
+            
+    contentInfo = contentInfo + tableBody
 
 
+# 总统计信息
+
+
+title = '删种' +str(len(deleteSizes)) + '|' + str(round(sum(deleteSizes)/1024/1024/1024,0)) + 'G|上传:'+str(round(sizeCount/1024/1024/1024,2)) + 'G'
+content = '实际删除文件' + str(len(deleteSizes)) + '个，大小' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G，上传:' +str(round(sizeCount/1024/1024/1024,2)) + 'G'
+print(content)
+data = {
+		    'text':title,
+		    'desp':content
+		}
+req = requests.post(api,data = data)
+print(req.text)
+
+title = '删除详情'
+content = '<table><tbody>' + tableHeader + contentInfo + '</tbody></table>'
+print(content)
+data = {
+		    'text':title,
+		    'desp':content
+		}
+req = requests.post(api,data = data)
+
+print(req.text)
 
 # 添加定时输入，超时20秒不输入，则直接删除，可适配自动执行脚本
 try:
@@ -301,11 +351,3 @@ if(delTag =="1"):
 else:
     print("删除操作已取消")
 
-api = 'https://iyuu.cn/'+ IyuuToken +'.send'
-title = '删种' +str(len(deleteSizes)) + '|' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G|上传:'+str(round(sizeCount/1024/1024/1024,2)) + 'G'
-content = '实际删除文件' + str(len(deleteSizes)) + '个，大小' + str(round(sum(deleteSizes)/1024/1024/1024,2)) + 'G\n\n' + deleteInfo
-data = {
-		    'text':title,
-		    'desp':content
-		}
-req = requests.post(api,data = data)
