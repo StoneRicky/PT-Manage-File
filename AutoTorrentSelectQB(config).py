@@ -7,9 +7,9 @@ import requests
 
 # 此处应该改为输入
 # 种子信息
-hash = '33c5ad6aaaee8fcb6cb6b6d0d00555d6414344b3'
+hash = '7f499763d074134f233288a5ca0a7a143137873a'
 # 测试文件大小 0-测试(仅统计) 1-修改
-testStatus = 0
+testStatus = 1
 # 设置信息 0-不下载 1-正常
 status = 0
 # if(testStatus == 1):
