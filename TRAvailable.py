@@ -65,7 +65,7 @@ for tr in trs:
 sizeList = list(set(sizeList))
 sizeList = [x for x in sizeList if x is not None and x != '']
 # 查询某个tracker所有的做种
-selectTracker = 'tracker2.leaves.red'
+selectTracker = 'ourbits.club'
 
 selectsizeList = []
 for tr in trs:
