@@ -14,5 +14,8 @@
 ## [TRList.py](https://github.com/StoneRicky/PT-Manage-File/blob/main/TRList.py)  
 用于统计当前Transmission中正在做种的文件的辅种数量，按倒序排列，可通过爱语飞飞通知
 
+## [TRAvailable.py](https://github.com/StoneRicky/PT-Manage-File/blob/main/TRAvailable.py)  
+用于统计当前Transmission中可以发种或做种的列表
+
 ## [AutoTorrentSelectQB.py](https://github.com/StoneRicky/PT-Manage-File/blob/main/AutoTorrentSelectQB.py)  
 批量修改文件优先级，可批量修改文件状态由“下载”改为“正常”，用于大包拆包刷流

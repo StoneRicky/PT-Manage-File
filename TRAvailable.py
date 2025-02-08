@@ -50,12 +50,12 @@ for tr in trs:
     if(tr.download_dir in StatisticDir):
         trList.append(tr.total_size)
 
-# # 统计所有tracker
-# trackerList = []
-# for tr in trs:
-#     trackerList.append(tracker(tr.tracker_list[0]))
-# trackerList = list(set(trackerList))
-# trackerList = [x for x in trackerList if x is not None and x != '']
+# 统计所有tracker
+trackerList = []
+for tr in trs:
+    trackerList.append(tracker(tr.tracker_list[0]))
+trackerList = list(set(trackerList))
+trackerList = [x for x in trackerList if x is not None and x != '']
 
 # 按大小
 # 统计所有文件
@@ -65,7 +65,7 @@ for tr in trs:
 sizeList = list(set(sizeList))
 sizeList = [x for x in sizeList if x is not None and x != '']
 # 查询某个tracker所有的做种
-selectTracker = 'ourbits.club'
+selectTracker = 'tracker.greatposterwall.com/c0e2070b19fb8f5cb91eb177bce84f53'
 
 selectsizeList = []
 for tr in trs:
