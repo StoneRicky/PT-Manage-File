@@ -2,11 +2,10 @@ import qbittorrentapi
 import time
 import requests
 import configparser
-# import TorrentEntity
+
 from func_timeout import FunctionTimedOut, func_timeout
 from colorama import Fore
-from tabulate import tabulate
-import wcwidth
+
 # 种子类
 class TorrentEntity:
 
@@ -269,7 +268,6 @@ sizeCount = 0
 api = 'https://iyuu.cn/'+ IyuuToken +'.send'
 
 contentInfo = ''
-# tableHeader = '<tr><th>文件名</th><th>已存在(min)</th><th>上次活动(min)</th><th>当前上传(k/s)</th><th>平均上传(k/s)</th><th>已上传(G)</th><th>标签</th></tr>'
 tableHeader = '<tr><th>文件名</th><th>已上传(G)</th><th>标签</th></tr>'
     
 for deleteSize in deleteSizes:
@@ -298,10 +296,6 @@ for deleteSize in deleteSizes:
             tableBody = tableBody + '<tr><td>' + tr['name'][:10] + '(' + trSize + ')' + '</td><td>' \
             + str(round(tr['uploaded']/1024/1024/1024,3)) +'</td><td>' \
             + torrent.tag.split(',')[0]+'</td></tr>'
-            # + str(round((t-tr['added_on'])/60)) +'</td><td>' \
-            # + str(round((t-tr['last_activity'])/60)) +'</td><td>' \
-            # + str(round(tr['upspeed']/1024)) +'</td><td>' \
-            # + str(round((tr['uploaded']/(t-tr['added_on']))/1024,2)) +'</td><td>' \
             
             # 上传累加
             sizeCount  = sizeCount + tr['uploaded']
