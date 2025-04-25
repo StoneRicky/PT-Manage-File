@@ -21,4 +21,4 @@
 用于统计当前Transmission中可以发种或做种的列表
 
 ## [AutoTorrentSelectQB.py](https://github.com/StoneRicky/PT-Manage-File/blob/main/AutoTorrentSelectQB.py)  
-批量修改文件优先级，可批量修改文件状态由“下载”改为“正常”，用于大包拆包刷流
+批量修改文件优先级，可批量修改文件状态由“不下载”改为“正常”，用于大包拆包刷流
