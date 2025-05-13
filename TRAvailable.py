@@ -18,7 +18,9 @@ conn_info = Client(
 # 统计路径
 StatisticDir = config.get('ListCount', 'statisticDir')
 # 最小统计数量
-miniCount = int(config.get('ListCount', 'miniCount'))
+miniCount = int(config.get('ListCount', 'miniListCount'))
+# 查询某个tracker所有的做种
+selectTracker = config.get('ListCount', 'selectTracker')
 # IyuuToken
 IyuuToken = config.get('IYUU', 'token')
 
@@ -64,8 +66,6 @@ for tr in trs:
     sizeList.append(tr.total_size)
 sizeList = list(set(sizeList))
 sizeList = [x for x in sizeList if x is not None and x != '']
-# 查询某个tracker所有的做种
-selectTracker = 'tracker.greatposterwall.com/c0e2070b19fb8f5cb91eb177bce84f53'
 
 selectsizeList = []
 for tr in trs:
